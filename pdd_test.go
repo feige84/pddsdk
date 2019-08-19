@@ -7,6 +7,9 @@ import (
 )
 
 func TestExecute(t *testing.T) {
+	//0: {duoId: 1817118, pid: "1817118_107021838", pidName: "花生小宝安卓"}
+	//1: {duoId: 1817118, pid: "1817118_107021792", pidName: "花生小宝IOS"
+
 	client := NewClient("7ae0ebbb60e6460d9444a56460a177db", "eef17075f318f9a3f1acfe04b42c9eb62453bc18")
 	//client.GetCache = FileGetCache
 	//client.SetCache = FileSetCache

@@ -320,3 +320,117 @@ func (client *ApiReq) DdkGoodsDetail(goodsIds int64, pid, customParameters strin
 		return nil, &errInfo
 	}
 }
+
+//pdd.ddk.goods.promotion.url.generate（多多进宝推广链接生成）
+func (client *ApiReq) DdkGoodsPromotionUrlGenerate(goodsIds int64, pid, customParameters string, zsDuoId int64, generateShortUrl, multiGroup, generateWeAppWebview, generateWeApp, GenerateWeiboAppWebview bool) (*GoodsDetail, *ApiErrorInfo) {
+	params := ApiParams{}
+	params["goods_id_list"] = "[" + fmt.Sprint(goodsIds) + "]" //商品ID列表。例如：[123456,123]，当入参带有goods_id_list字段，将不会以opt_id、 cat_id、keyword维度筛选商品
+	params["pid"] = pid                                        //推广位id
+	if customParameters != "" {
+		params["custom_parameters"] = customParameters //自定义参数
+	}
+	if zsDuoId > 0 {
+		params["zs_duo_id"] = fmt.Sprint(zsDuoId) //招商多多客ID
+	}
+	if generateShortUrl {
+		params["generate_short_url"] = "true" //是否生成短链接，true-是，false-否
+	}
+	if multiGroup {
+		params["multi_group"] = "true" //true--生成多人团推广链接 false--生成单人团推广链接（默认false）1、单人团推广链接：用户访问单人团推广链接，可直接购买商品无需拼团。2、多人团推广链接：用户访问双人团推广链接开团，若用户分享给他人参团，则开团者和参团者的佣金均结算给推手
+	}
+	if generateWeAppWebview {
+		params["generate_weapp_webview"] = "true" //是否生成唤起微信客户端链接，true-是，false-否，默认false
+	}
+	if generateWeApp {
+		params["generate_we_app"] = "true" //是否生成小程序推广
+	}
+	if GenerateWeiboAppWebview {
+		params["generate_weiboapp_webview"] = "true" //是否生成微博推广链接
+	}
+
+	resp, err := client.Execute("pdd.ddk.goods.promotion.url.generate", params)
+	if err != nil {
+		return nil, err
+	}
+
+	if apiErrInfo := client.CheckApiErr(resp); apiErrInfo != nil {
+		return nil, apiErrInfo
+	}
+
+	goods := &GodsPromotionUrl{}
+
+	goodsResp := resp.Get("goods_promotion_url_generate_response")
+	if goodsResp.Exists() && goodsResp.Get("goods_promotion_url_list").IsArray() {
+		if len(goodsResp.Get("goods_details").Array()) > 0 {
+			detail := goodsResp.Get("goods_details").Array()[0]
+
+			goods.MallCouponId = detail.Get("mall_coupon_id").Int()                                 //店铺优惠券id
+			goods.MallCouponDiscountPct = detail.Get("mall_coupon_discount_pct").Int()              //店铺折扣
+			goods.MallCouponMinOrderAmount = detail.Get("mall_coupon_min_order_amount").Int()       //最小使用金额
+			goods.MallCouponMaxDiscountAmount = detail.Get("mall_coupon_max_discount_amount").Int() //最大使用金额
+			goods.MallCouponTotalQuantity = detail.Get("mall_coupon_total_quantity").Int()          //店铺券总量
+			goods.MallCouponRemainQuantity = detail.Get("mall_coupon_remain_quantity").Int()        //店铺券余量
+			goods.MallCouponStartTime = detail.Get("mall_coupon_start_time").Int()                  //店铺券使用开始时间
+			goods.MallCouponEndTime = detail.Get("mall_coupon_end_time").Int()                      //店铺券使用结束时间
+			goods.GoodsId = detail.Get("goods_id").Int()                                            //参与多多进宝的商品ID
+			goods.GoodsName = detail.Get("goods_name").String()                                     //参与多多进宝的商品标题
+			goods.GoodsDesc = detail.Get("goods_desc").String()                                     //参与多多进宝的商品描述
+			goods.GoodsImageUrl = detail.Get("goods_image_url").String()                            //多多进宝商品主图
+			goods.GoodsImageUrl = detail.Get("goods_image_url").String()                            //商品主图
+			if detail.Get("goods_gallery_urls").IsArray() {
+				for _, v := range detail.Get("goods_gallery_urls").Array() {
+					goods.GoodsGalleryUrls = append(goods.GoodsGalleryUrls, v.String()) //商品轮播图
+				}
+			}
+			goods.MinGroupPrice = detail.Get("min_group_price").Int()   //最低价sku的拼团价，单位为分
+			goods.MinNormalPrice = detail.Get("min_normal_price").Int() //最低价sku的单买价，单位为分
+			goods.MallName = detail.Get("mall_name").String()           //店铺名称
+			goods.OptId = detail.Get("opt_id").Int()                    //商品标签ID，使用pdd.goods.opt.get接口获取
+			goods.OptName = detail.Get("opt_name").String()             //商品标签名称
+			if detail.Get("opt_ids").IsArray() {
+				for _, v := range detail.Get("opt_ids").Array() {
+					goods.OptIds = append(goods.OptIds, v.Int()) //商品标签id
+				}
+			}
+			if detail.Get("cat_ids").IsArray() {
+				for _, v := range detail.Get("cat_ids").Array() {
+					goods.CatIds = append(goods.CatIds, v.Int()) //商品类目id
+				}
+			}
+			goods.CouponMinOrderAmount = detail.Get("coupon_min_order_amount").Int() //优惠券门槛金额，单位为分
+			goods.CouponDiscount = detail.Get("coupon_discount").Int()               //优惠券面额，单位为分
+			goods.CouponTotalQuantity = detail.Get("coupon_total_quantity").Int()    //优惠券总数量
+			goods.CouponRemainQuantity = detail.Get("coupon_remain_quantity").Int()  //优惠券剩余数量
+			goods.CouponStartTime = detail.Get("coupon_start_time").Int()            //优惠券生效时间，UNIX时间戳
+			goods.CouponEndTime = detail.Get("coupon_end_time").Int()                //优惠券失效时间，UNIX时间戳
+			goods.PromotionRate = detail.Get("promotion_rate").Int()                 //佣金比例，千分比
+			goods.GoodsEvalCount = detail.Get("goods_eval_count").Int()              //商品评价数
+			goods.CatId = detail.Get("cat_id").Int()                                 //商品类目ID，使用pdd.goods.cats.get接口获取
+			goods.SalesTip = detail.Get("sales_tip").String()                        //已售卖件数
+			goods.MallId = detail.Get("mall_id").Int()                               //商家id
+			if detail.Get("service_tags").IsArray() {
+				for _, v := range detail.Get("service_tags").Array() {
+					goods.ServiceTags = append(goods.ServiceTags, v.Int()) //服务标签: 4-送货入户并安装,5-送货入户,6-电子发票,9-坏果包赔,11-闪电退款,12-24小时发货,13-48小时发货,17-顺丰包邮,18-只换不修,19-全国联保,20-分期付款,24-极速退款,25-品质保障,26-缺重包退,27-当日发货,28-可定制化,29-预约配送,1000001-正品发票,1000002-送货入户并安装
+				}
+			}
+			goods.CltCpnBatchSn = detail.Get("clt_cpn_batch_sn").String()            //店铺收藏券id
+			goods.CltCpnStartTime = detail.Get("clt_cpn_start_time").Int()           //店铺收藏券起始时间
+			goods.CltCpnEndTime = detail.Get("clt_cpn_end_time").Int()               //店铺收藏券截止时间
+			goods.CltCpnQuantity = detail.Get("clt_cpn_quantity").Int()              //店铺收藏券总量
+			goods.CltCpnRemainQuantity = detail.Get("clt_cpn_remain_quantity").Int() //店铺收藏券剩余量
+			goods.CltCpnDiscount = detail.Get("clt_cpn_discount").Int()              //店铺收藏券面额，单位为分
+			goods.CltCpnMinAmt = detail.Get("clt_cpn_min_amt").Int()                 //店铺收藏券使用门槛价格，单位为分
+			goods.DescTxt = detail.Get("desc_txt").String()                          //描述分
+			goods.ServTxt = detail.Get("serv_txt").String()                          //服务分
+			goods.LgstTxt = detail.Get("lgst_txt").String()                          //物流分
+			goods.PlanType = detail.Get("plan_type").Int()                           //推广计划类型
+			goods.ZsDuoId = detail.Get("zs_duo_id").Int()                            //招商团长id
+		}
+		return goods, nil
+	} else {
+		errInfo := ApiErrorInfo{}
+		errInfo.ErrorCode = 77777
+		errInfo.SubMsg = ApiErrInfo[errInfo.ErrorCode].Error()
+		return nil, &errInfo
+	}
+}

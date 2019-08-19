@@ -106,3 +106,27 @@ type GoodsDetail struct {
 	PlanType                    int64    `json:"plan_type"`                       //推广计划类型
 	ZsDuoId                     int64    `json:"zs_duo_id"`                       //招商团长id
 }
+
+type WeAppInfo struct {
+	WeAppIconUrl      string `json:"we_app_icon_url"`     //小程序图片
+	BannerUrl         string `json:"banner_url"`          //Banner图
+	Desc              string `json:"desc"`                //描述
+	SourceDisplayName string `json:"source_display_name"` //来源名
+	PagePath          string `json:"page_path"`           //小程序path值
+	UserName          string `json:"user_name"`           //用户名
+	Title             string `json:"title"`               //小程序标题
+	AppId             string `json:"app_id"`              //拼多多小程序id
+}
+
+type GodsPromotionUrl struct {
+	WeAppWebViewShortUrl    string    `json:"we_app_web_view_short_url"` //唤起微信app推广短链接
+	WeAppWebViewUrl         string    `json:"we_app_web_view_url"`       //唤起微信app推广链接
+	MobileShortUrl          string    `json:"mobile_short_url"`          //唤醒拼多多app的推广短链接
+	MobileUrl               string    `json:"mobile_url"`                //唤醒拼多多app的推广长链接
+	ShortUrl                string    `json:"short_url"`                 //推广短链接
+	Url                     string    `json:"url"`                       //推广长链接
+	WeAppInfo               WeAppInfo `json:"we_app_info"`               //小程序信息
+	GoodsDetail             GoodsDetail
+	WeiboAppWebViewShortUrl string `json:"weibo_app_web_view_short_url"` //微博推广短链接
+	WeiboAppWebViewUrl      string `json:"weibo_app_web_view_url"`       //微博推广链接
+}
