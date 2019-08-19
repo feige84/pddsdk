@@ -31,7 +31,6 @@ func (client *ApiReq) DdkGoodsSearch(keyword string, goodsIds interface{}, sortT
 		case []string:
 			goodsIdList = "[" + strings.Join(result, ",") + "]"
 		}
-		fmt.Println("goodsIdList:", goodsIdList)
 		//传入ID精准查询
 		params["goods_id_list"] = goodsIdList //商品ID列表。例如：[123456,123]，当入参带有goods_id_list字段，将不会以opt_id、 cat_id、keyword维度筛选商品
 	} else {
