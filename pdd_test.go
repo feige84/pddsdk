@@ -18,13 +18,14 @@ func TestExecute(t *testing.T) {
 	//fmt.Println("return:", data, apiErr)
 
 	//jd.union.open.order.query 订单查询接口
-	//data2, apiErr2 := client.NormalGetOrder("20190711", 1, 20, 1, 0, "")
-	//fmt.Println("return:", data2, apiErr2)
+	data2, apiErr2 := client.DdkGoodsDetail(25579270053, "", "", 0, 0)
+	jsonData, jsonErr := json.Marshal(data2)
+	fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr2)
 
 	//jd.union.open.promotion.common.get 获取通用推广链接//这个pid一直都是这样，提示错误，用不了。
-	data3, apiErr3 := client.DdkGoodsSearch("", 1116130524, 0, 1, 20, 0, 0, 0, false, false)
-	jsonData, jsonErr := json.Marshal(data3)
-	fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr3)
+	//data3, apiErr3 := client.DdkGoodsSearch("", 1116130524, 0, 1, 20, 0, 0, 0, false, false)
+	//jsonData, jsonErr := json.Marshal(data3)
+	//fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr3)
 	//fmt.Println("return:", data3, apiErr3)
 
 	//jd.union.open.goods.promotiongoodsinfo.query 获取通用推广链接,批量的
