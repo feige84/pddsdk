@@ -32,8 +32,8 @@ type ApiReq struct {
 	ReqCount     int64
 	//GetCache    func(...interface{}) string  //FILE
 	//SetCache    func(...interface{}) bool //FILE
-	GetCache    func(string) string              //REDIS
-	SetCache    func(string, interface{}, int64) //REDIS
+	GetCache    func(string) string         //REDIS
+	SetCache    func(string, string, int64) //REDIS
 	WriteErrLog func(ApiLog)
 }
 
@@ -164,6 +164,7 @@ func (client *ApiReq) Execute(method string, params ApiParams) (*gjson.Result, *
 				errLog.ErrorMsg = apiErrInfo.ErrorMsg
 				errLog.SubCode = apiErrInfo.SubCode
 				errLog.SubMsg = apiErrInfo.SubMsg
+				errLog.RequestId = apiErrInfo.RequestId
 				errLog.Result = string(response)
 
 				client.WriteErrLog(errLog)
