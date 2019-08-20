@@ -28,10 +28,10 @@ func TestExecute(t *testing.T) {
 	//fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr2)
 
 	//jd.union.open.promotion.common.get 获取通用推广链接//这个pid一直都是这样，提示错误，用不了。
-	data3, apiErr3 := client.DdkGoodsSearch("", nil, "", 0, 1, 10, 0, 0, 0, false, false)
-	jsonData, jsonErr := json.Marshal(data3)
-	fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr3)
-	fmt.Println("return:", data3, apiErr3)
+	//data3, apiErr3 := client.DdkGoodsSearch("", nil, "", 0, 1, 10, 0, 0, 0, false, false)
+	//jsonData, jsonErr := json.Marshal(data3)
+	//fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr3)
+	//fmt.Println("return:", data3, apiErr3)
 
 	//jd.union.open.goods.promotiongoodsinfo.query 获取通用推广链接,批量的
 	//data4, apiErr4 := client.DdkOrderListGet(1566277200, 1566277800, 1, 50, false)
@@ -39,8 +39,9 @@ func TestExecute(t *testing.T) {
 	//fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr4)
 
 	//jd.union.open.goods.promotiongoodsinfo.query 获取通用推广链接,单个的
-	//data5, apiErr5 := client.NormalGetPromotionGoodsInfoSingle(50070163505)
-	//fmt.Println("return:", data5, apiErr5)
+	data5, apiErr5 := client.DdkMallListGet(515020177, nil, 0, 0, 1, 1, 0, false)
+	jsonData, jsonErr := json.Marshal(data5)
+	fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr5)
 
 	//jd.union.open.goods.jingfen.query 京粉精选商品查询接口
 	//data6, apiErr6 := client.NormalGetJFGoods(1, 1, 20, "inOrderCount30DaysSku", "desc")

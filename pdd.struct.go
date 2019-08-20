@@ -219,3 +219,45 @@ type OrderDetail struct {
 	CustomParameters      string `json:"custom_parameters"`        //自定义参数
 	CpaNew                int64  `json:"cpa_new"`                  //是否是 cpa 新用户，1表示是，0表示否
 }
+
+//店铺部分
+type MallInfoFull struct {
+	CatIdList            []int64 `json:"cat_id_list"`             //商品类目列表
+	CltCpnBatchSn        string  `json:"clt_cpn_batch_sn"`        //店铺收藏券ID
+	CltCpnDiscount       int64   `json:"clt_cpn_discount"`        //店铺收藏券券面额
+	CltCpnEndTime        int64   `json:"clt_cpn_end_time"`        //店铺收藏券失效时间
+	CltCpnMinAmt         int64   `json:"clt_cpn_min_amt"`         //店铺收藏券使用门槛
+	CltCpnQuantity       int64   `json:"clt_cpn_quantity"`        //店铺收藏券总量
+	CltCpnRemainQuantity int64   `json:"clt_cpn_remain_quantity"` //店铺收藏券剩余量
+	CltCpnStartTime      int64   `json:"clt_cpn_start_time"`      //店铺收藏券生效时间
+	//goods_detail_vo_list 商品详情列表。暂时不用了。没必要。对象数组
+	GoodsNum int64  `json:"goods_num"` //商品数
+	ImgUrl   string `json:"img_url"`   //店铺logo
+	//mall_coupon_info_list //店铺券列表，暂时不用了。没必要。对象数组
+	MallId       int64  `json:"mall_id"`       //店铺id
+	MallName     string `json:"mall_name"`     //店铺名称
+	MallRate     int64  `json:"mall_rate"`     //全店推广佣金
+	MerchantType int64  `json:"merchant_type"` //店铺类型，1-个人，2-企业，3-旗舰店，4-专卖店，5-专营店，6-普通店
+	SalesTip     string `json:"sales_tip"`     //销量
+	DescTxt      string `json:"desc_txt"`      //描述评分
+	ServTxt      string `json:"serv_txt"`      //服务评分
+	LgstTxt      string `json:"lgst_txt"`      //物流评分
+}
+
+type MallInfo struct {
+	GoodsNum     int64  `json:"goods_num"`     //商品数
+	ImgUrl       string `json:"img_url"`       //店铺logo
+	MallId       int64  `json:"mall_id"`       //店铺id
+	MallName     string `json:"mall_name"`     //店铺名称
+	MallRate     int64  `json:"mall_rate"`     //全店推广佣金
+	MerchantType int64  `json:"merchant_type"` //店铺类型，1-个人，2-企业，3-旗舰店，4-专卖店，5-专营店，6-普通店
+	SalesTip     string `json:"sales_tip"`     //销量
+	DescTxt      string `json:"desc_txt"`      //描述评分
+	ServTxt      string `json:"serv_txt"`      //服务评分
+	LgstTxt      string `json:"lgst_txt"`      //物流评分
+}
+
+type MallList struct {
+	MallList []MallInfo `json:"mall_list"`
+	Total    int64      `json:"total"`
+}

@@ -9,28 +9,8 @@ import (
 func (client *ApiReq) DdkGoodsSearch(keyword string, goodsIds interface{}, rangeList string, sortType, page, pageSize, catId, optId, merchantType int64, withCoupon, isBrandGoods bool) (*GoodsSearch, *ApiErrorInfo) {
 	params := ApiParams{}
 	//如果是链接。goods_id
-	if goodsIds != nil {
-		var goodsIdList string
-		switch result := goodsIds.(type) {
-		case int, int64:
-			goodsIdList = "[" + fmt.Sprint(result) + "]"
-		case []int:
-			strArr := []string{}
-			for _, v := range result {
-				strArr = append(strArr, fmt.Sprint(v))
-			}
-			goodsIdList = "[" + strings.Join(strArr, ",") + "]"
-		case []int64:
-			strArr := []string{}
-			for _, v := range result {
-				strArr = append(strArr, fmt.Sprint(v))
-			}
-			goodsIdList = "[" + strings.Join(strArr, ",") + "]"
-		case string:
-			goodsIdList = "[" + result + "]"
-		case []string:
-			goodsIdList = "[" + strings.Join(result, ",") + "]"
-		}
+
+	if goodsIdList, hasData := joinArr(goodsIds); hasData {
 		//传入ID精准查询
 		params["goods_id_list"] = goodsIdList //商品ID列表。例如：[123456,123]，当入参带有goods_id_list字段，将不会以opt_id、 cat_id、keyword维度筛选商品
 	} else {
@@ -541,4 +521,111 @@ func (client *ApiReq) DdkOrderListGet(startUpdateTime, endUpdateTime, page, page
 		errInfo.SubMsg = ApiErrInfo[errInfo.ErrorCode].Error()
 		return nil, &errInfo
 	}
+}
+
+//pdd.ddk.merchant.list.get（多多客查店铺列表接口）这里只是为了获取店铺信息写的接口。要获取完整信息。重新写一个。
+func (client *ApiReq) DdkMallListGet(mallIds, merchantType interface{}, catId, hasCoupon, page, pageSize, queryRangeStr int64, hasCltCpn bool) (*MallList, *ApiErrorInfo) {
+	params := ApiParams{}
+	if mallIdList, hasData := joinArr(mallIds); hasData {
+		//传入ID精准查询
+		params["mall_id_list"] = mallIdList //店铺id
+	}
+	if merchantTypeList, hasData := joinArr(merchantType); hasData {
+		//传入ID精准查询
+		params["merchant_type_list"] = merchantTypeList //店铺id
+	}
+	if catId > 0 {
+		params["cat_id"] = fmt.Sprint(catId) //商品类目ID，使用pdd.goods.cats.get接口获取
+	}
+	if hasCoupon > 0 {
+		params["has_coupon"] = fmt.Sprint(hasCoupon) //是否有优惠券 （0 所有；1 必须有券。）
+	}
+	if queryRangeStr > 0 {
+		params["query_range_str"] = fmt.Sprint(queryRangeStr)
+		// 查询范围
+		// 0----商品拼团价格区间；
+		// 1----商品券后价价格区间；
+		// 2----佣金比例区间；
+		// 3----优惠券金额区间；
+		// 4----加入多多进宝时间区间；
+		// 5----销量区间；
+		// 6----佣金金额区间
+	}
+	if page <= 0 {
+		page = 1
+	}
+	params["page"] = fmt.Sprint(page)
+	if pageSize <= 0 || pageSize > 100 {
+		pageSize = 50
+	}
+	params["page_size"] = fmt.Sprint(pageSize)
+	if hasCltCpn {
+		params["has_clt_cpn"] = "true" //是否有店铺收藏券 （0 所有；1 必须有券）
+	}
+
+	//range_vo_list 这个参数文档说是筛选范围。并没有给样例。
+
+	resp, err := client.Execute("pdd.ddk.merchant.list.get", params)
+	if err != nil {
+		return nil, err
+	}
+
+	if apiErrInfo := client.CheckApiErr(resp); apiErrInfo != nil {
+		return nil, apiErrInfo
+	}
+
+	mallList := MallList{}
+	mallResp := resp.Get("merchant_list_response")
+	if mallResp.Exists() && mallResp.Get("mall_search_info_vo_list").IsArray() {
+		mallInfoList := []MallInfo{}
+		for _, mall := range mallResp.Get("mall_search_info_vo_list").Array() {
+			mallInfo := MallInfo{}
+			mallInfo.GoodsNum = mall.Get("goods_num").Int()         //商品数
+			mallInfo.ImgUrl = mall.Get("img_url").String()          //店铺logo
+			mallInfo.MallId = mall.Get("mall_id").Int()             //店铺id
+			mallInfo.MallName = mall.Get("mall_name").String()      //店铺名称
+			mallInfo.MallRate = mall.Get("mall_rate").Int()         //全店推广佣金
+			mallInfo.MerchantType = mall.Get("merchant_type").Int() //店铺类型，1-个人，2-企业，3-旗舰店，4-专卖店，5-专营店，6-普通店
+			mallInfo.SalesTip = mall.Get("sales_tip").String()      //销量
+			mallInfo.DescTxt = mall.Get("desc_txt").String()        //描述评分
+			mallInfo.ServTxt = mall.Get("serv_txt").String()        //服务评分
+			mallInfo.LgstTxt = mall.Get("lgst_txt").String()        //物流评分
+			mallInfoList = append(mallInfoList, mallInfo)
+		}
+		mallList.MallList = mallInfoList
+		mallList.Total = mallResp.Get("total_count").Int()
+		return &mallList, nil
+	} else {
+		errInfo := ApiErrorInfo{}
+		errInfo.ErrorCode = 77777
+		errInfo.SubMsg = ApiErrInfo[errInfo.ErrorCode].Error()
+		return nil, &errInfo
+	}
+}
+
+func joinArr(value interface{}) (string, bool) {
+	var returnStr string
+	if value != nil {
+		switch result := value.(type) {
+		case int, int64:
+			returnStr = "[" + fmt.Sprint(result) + "]"
+		case []int:
+			strArr := []string{}
+			for _, v := range result {
+				strArr = append(strArr, fmt.Sprint(v))
+			}
+			returnStr = "[" + strings.Join(strArr, ",") + "]"
+		case []int64:
+			strArr := []string{}
+			for _, v := range result {
+				strArr = append(strArr, fmt.Sprint(v))
+			}
+			returnStr = "[" + strings.Join(strArr, ",") + "]"
+		case string:
+			returnStr = "[" + result + "]"
+		case []string:
+			returnStr = "[" + strings.Join(result, ",") + "]"
+		}
+	}
+	return returnStr, returnStr != ""
 }
