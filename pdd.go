@@ -125,8 +125,8 @@ func (client *ApiReq) Execute(method string, params ApiParams) (*gjson.Result, *
 
 		//开始请求
 		client.ReqCount++ //请求次数+1
-		fmt.Println("value.Encode():", value.Encode())
 		response, err := client.httpSend("POST", HttpRouter, value.Encode())
+		fmt.Println("value.Encode():", value.Encode())
 		fmt.Println("response:", string(response))
 		if err != nil {
 			//重试N次

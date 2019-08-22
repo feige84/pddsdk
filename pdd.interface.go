@@ -607,22 +607,36 @@ func joinArr(value interface{}) (string, bool) {
 	var returnStr string
 	if value != nil {
 		switch result := value.(type) {
-		case int, int64:
-			returnStr = "[" + fmt.Sprint(result) + "]"
+		case int:
+			if result > 0 {
+				returnStr = "[" + fmt.Sprint(result) + "]"
+			}
+		case int64:
+			if result > 0 {
+				returnStr = "[" + fmt.Sprint(result) + "]"
+			}
 		case []int:
 			strArr := []string{}
 			for _, v := range result {
-				strArr = append(strArr, fmt.Sprint(v))
+				if v > 0 {
+					strArr = append(strArr, fmt.Sprint(v))
+				}
 			}
 			returnStr = "[" + strings.Join(strArr, ",") + "]"
 		case []int64:
 			strArr := []string{}
 			for _, v := range result {
-				strArr = append(strArr, fmt.Sprint(v))
+				if v > 0 {
+					strArr = append(strArr, fmt.Sprint(v))
+				}
 			}
-			returnStr = "[" + strings.Join(strArr, ",") + "]"
+			if len(strArr) > 0 {
+				returnStr = "[" + strings.Join(strArr, ",") + "]"
+			}
 		case string:
-			returnStr = "[" + result + "]"
+			if result != "" {
+				returnStr = "[" + result + "]"
+			}
 		case []string:
 			returnStr = "[" + strings.Join(result, ",") + "]"
 		}
