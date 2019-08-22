@@ -34,14 +34,15 @@ func TestExecute(t *testing.T) {
 	//fmt.Println("return:", data3, apiErr3)
 
 	//jd.union.open.goods.promotiongoodsinfo.query 获取通用推广链接,批量的
-	//data4, apiErr4 := client.DdkOrderListGet(1566277200, 1566277800, 1, 50, false)
-	//jsonData, jsonErr := json.Marshal(data4)
-	//fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr4)
+	//2019/8/22 16:40:0
+	data4, apiErr4 := client.DdkOrderListGet(1566463200, 1566463320, 1, 50, true)
+	jsonData, jsonErr := json.Marshal(data4)
+	fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr4)
 
 	//jd.union.open.goods.promotiongoodsinfo.query 获取通用推广链接,单个的
-	data5, apiErr5 := client.DdkMallListGet(515020177, nil, 0, 0, 1, 1, 0, false)
-	jsonData, jsonErr := json.Marshal(data5)
-	fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr5)
+	//data5, apiErr5 := client.DdkMallListGet(515020177, nil, 0, 0, 1, 1, 0, false)
+	//jsonData, jsonErr := json.Marshal(data5)
+	//fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr5)
 
 	//jd.union.open.goods.jingfen.query 京粉精选商品查询接口
 	//data6, apiErr6 := client.NormalGetJFGoods(1, 1, 20, "inOrderCount30DaysSku", "desc")

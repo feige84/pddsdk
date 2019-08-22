@@ -81,11 +81,11 @@ func (client *ApiReq) Execute(method string, params ApiParams) (*gjson.Result, *
 	if client.AccessToken != "" {
 		value.Add("access_token", client.AccessToken)
 	}
-	if client.Version != "" {
+	/*if client.Version != "" {
 		value.Add("version", client.Version)
 	} else {
 		value.Add("version", "V1")
-	}
+	}*/
 	if client.DataType != "" {
 		value.Add("data_type", client.DataType)
 	} else {

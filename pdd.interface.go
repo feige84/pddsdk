@@ -6,7 +6,7 @@ import (
 )
 
 //pdd.ddk.goods.search（多多进宝商品查询）
-func (client *ApiReq) DdkGoodsSearch(keyword string, goodsIds interface{}, rangeList string, sortType, page, pageSize, catId, optId, merchantType int64, withCoupon, isBrandGoods bool) (*GoodsSearch, *ApiErrorInfo) {
+func (client *ApiReq) DdkGoodsSearch(keyword string, goodsIds interface{}, pid, rangeList string, sortType, page, pageSize, catId, optId, merchantType int64, withCoupon, isBrandGoods bool) (*GoodsSearch, *ApiErrorInfo) {
 	params := ApiParams{}
 	//如果是链接。goods_id
 
@@ -95,7 +95,9 @@ func (client *ApiReq) DdkGoodsSearch(keyword string, goodsIds interface{}, range
 	if merchantType > 0 {
 		params["merchant_type"] = fmt.Sprint(merchantType) //店铺类型，1-个人，2-企业，3-旗舰店，4-专卖店，5-专营店，6-普通店（未传为全部）
 	}
-	params["pid"] = keyword //推广位id
+	if pid != "" {
+		params["pid"] = pid //推广位id
+	}
 	//params["custom_parameters"] = keyword  //自定义参数
 	//params["merchant_type_list"] = keyword //店铺类型数组
 	if isBrandGoods {
@@ -459,10 +461,13 @@ func (client *ApiReq) DdkGoodsPromotionUrlGenerate(goodsIds int64, pid, customPa
 }
 
 //pdd.ddk.order.list.increment.get（最后更新时间段增量同步推广订单信息）
+/*
+{"order_list_get_response":{"total_count":1,"order_list":[{"match_channel":5,"goods_price":1300,"promotion_rate":80,"type":0,"order_status":1,"order_create_time":1566463230,"order_settle_time":null,"order_verify_time":null,"order_group_success_time":1566463236,"order_amount":1300,"order_modify_at":1566463244,"auth_duo_id":0,"cpa_new":0,"goods_name":"高品质金属指陀螺钥匙扣开瓶器男士腰挂扣创意汽车钥匙链礼品","batch_no":"","goods_quantity":1,"goods_id":213159472,"goods_thumbnail_url":"http://t09img.yangkeduo.com/images/2018-05-17/fe69fd2298c5a492897168b4cf265079.jpeg","order_receive_time":null,"custom_parameters":"sEe7fkOiB4TWogQImRRfHFs3DTMsnERL5PsoTHfyrtNWIly67iR13PlVeqqPqAoUfLViamh2XWmJlB6sXZn/sw==","promotion_amount":104,"order_pay_time":1566463236,"group_id":859337392764094000,"duo_coupon_amount":0,"scene_at_market_fee":0,"order_status_desc":"已成团","fail_reason":null,"order_id":"diJCAbih9WeZFkMQXJklbg==","order_sn":"190822-337392764093890","p_id":"1817118_107021838","zs_duo_id":0}],"request_id":"15664634761188237"}}
+*/
 func (client *ApiReq) DdkOrderListGet(startUpdateTime, endUpdateTime, page, pageSize int64, returnCount bool) (*OrderList, *ApiErrorInfo) {
 	params := ApiParams{}
 	params["start_update_time"] = fmt.Sprint(startUpdateTime) //最近90天内多多进宝商品订单更新时间--查询时间开始。note：此时间为时间戳，指格林威治时间 1970 年01 月 01 日 00 时 00 分 00 秒(北京时间 1970 年 01 月 01 日 08 时 00 分 00 秒)起至现在的总秒数
-	params["end_update_time"] = fmt.Sprint(startUpdateTime)   //查询结束时间，和开始时间相差不能超过24小时。note：此时间为时间戳，指格林威治时间 1970 年01 月 01 日 00 时 00 分 00 秒(北京时间 1970 年 01 月 01 日 08 时 00 分 00 秒)起至现在的总秒数
+	params["end_update_time"] = fmt.Sprint(endUpdateTime)     //查询结束时间，和开始时间相差不能超过24小时。note：此时间为时间戳，指格林威治时间 1970 年01 月 01 日 00 时 00 分 00 秒(北京时间 1970 年 01 月 01 日 08 时 00 分 00 秒)起至现在的总秒数
 	if page <= 0 {
 		page = 1
 	}
@@ -473,7 +478,9 @@ func (client *ApiReq) DdkOrderListGet(startUpdateTime, endUpdateTime, page, page
 	params["page_size"] = fmt.Sprint(pageSize) //返回的每页结果订单数，默认为100，范围为10到100，建议使用40~50，可以提高成功率，减少超时数量。
 
 	if returnCount {
-		params["return_count"] = "true" //是否返回总数，默认为true，如果指定false, 则返回的结果中不包含总记录数，通过此种方式获取增量数据，效率在原有的基础上有80%的提升。
+		params["return_count"] = "true"
+	} else {
+		params["return_count"] = "false" //是否返回总数，默认为true，如果指定false, 则返回的结果中不包含总记录数，通过此种方式获取增量数据，效率在原有的基础上有80%的提升。
 	}
 
 	resp, err := client.Execute("pdd.ddk.order.list.increment.get", params)
