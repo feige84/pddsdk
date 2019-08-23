@@ -3,6 +3,7 @@ package pddsdk
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 //pdd.ddk.goods.search（多多进宝商品查询）
@@ -498,25 +499,37 @@ func (client *ApiReq) DdkOrderListGet(startUpdateTime, endUpdateTime, page, page
 		orderDetails := []OrderDetail{}
 		for _, order := range orderResp.Get("order_list").Array() {
 			orderDetail := OrderDetail{}
-			orderDetail.OrderSn = order.Get("order_sn").String()                            //推广订单编号
-			orderDetail.GoodsId = order.Get("goods_id").Int()                               //商品ID
-			orderDetail.GoodsName = order.Get("goods_name").String()                        //商品标题
-			orderDetail.GoodsThumbnailUrl = order.Get("goods_thumbnail_url").String()       //商品缩略图
-			orderDetail.GoodsQuantity = order.Get("goods_quantity").Int()                   //购买商品的数量
-			orderDetail.GoodsPrice = order.Get("goods_price").Int()                         //订单中sku的单件价格，单位为分
-			orderDetail.OrderAmount = order.Get("order_amount").Int()                       //实际支付金额，单位为分
-			orderDetail.PId = order.Get("p_id").String()                                    //推广位ID
-			orderDetail.PromotionRate = order.Get("promotion_rate").Int()                   //佣金比例，千分比
-			orderDetail.PromotionAmount = order.Get("promotion_amount").Int()               //佣金金额，单位为分
-			orderDetail.OrderStatus = order.Get("order_status").Int()                       //订单状态： -1 未支付; 0-已支付；1-已成团；2-确认收货；3-审核成功；4-审核失败（不可提现）；5-已经结算；8-非多多进宝商品（无佣金订单）
-			orderDetail.OrderStatusDesc = order.Get("order_status_desc").String()           //订单状态描述
-			orderDetail.OrderCreateTime = order.Get("order_create_time").Int()              //订单生成时间，UNIX时间戳
-			orderDetail.OrderPayTime = order.Get("order_pay_time").Int()                    //支付时间
+			orderDetail.OrderSn = order.Get("order_sn").String()                      //推广订单编号
+			orderDetail.GoodsId = order.Get("goods_id").Int()                         //商品ID
+			orderDetail.GoodsName = order.Get("goods_name").String()                  //商品标题
+			orderDetail.GoodsThumbnailUrl = order.Get("goods_thumbnail_url").String() //商品缩略图
+			orderDetail.GoodsQuantity = order.Get("goods_quantity").Int()             //购买商品的数量
+			orderDetail.GoodsPrice = order.Get("goods_price").Int()                   //订单中sku的单件价格，单位为分
+			orderDetail.OrderAmount = order.Get("order_amount").Int()                 //实际支付金额，单位为分
+			orderDetail.PId = order.Get("p_id").String()                              //推广位ID
+			orderDetail.PromotionRate = order.Get("promotion_rate").Int()             //佣金比例，千分比
+			orderDetail.PromotionAmount = order.Get("promotion_amount").Int()         //佣金金额，单位为分
+			orderDetail.OrderStatus = order.Get("order_status").Int()                 //订单状态： -1 未支付; 0-已支付；1-已成团；2-确认收货；3-审核成功；4-审核失败（不可提现）；5-已经结算；8-非多多进宝商品（无佣金订单）
+			orderDetail.OrderStatusDesc = order.Get("order_status_desc").String()     //订单状态描述
+			orderDetail.OrderCreateTime = order.Get("order_create_time").Int()        //订单生成时间，UNIX时间戳
+			if orderDetail.OrderCreateTime > 0 {
+				orderDetail.OrderCreateTimeText = time.Unix(orderDetail.OrderCreateTime, 0).In(TimeLocal).Format("2006-01-02 15:04:05")
+			}
+			orderDetail.OrderPayTime = order.Get("order_pay_time").Int() //支付时间
+			if orderDetail.OrderPayTime > 0 {
+				orderDetail.OrderPayTimeText = time.Unix(orderDetail.OrderPayTime, 0).In(TimeLocal).Format("2006-01-02 15:04:05")
+			}
 			orderDetail.OrderGroupSuccessTime = order.Get("order_group_success_time").Int() //成团时间
-			orderDetail.OrderVerifyTime = order.Get("order_verify_time").Int()              //审核时间
-			orderDetail.OrderModifyAt = order.Get("order_modify_at").Int()                  //最后更新时间
-			orderDetail.CustomParameters = order.Get("custom_parameters").String()          //自定义参数
-			orderDetail.CpaNew = order.Get("cpa_new").Int()                                 //是否是 cpa 新用户，1表示是，0表示否
+			if orderDetail.OrderGroupSuccessTime > 0 {
+				orderDetail.OrderGroupSuccessTimeText = time.Unix(orderDetail.OrderGroupSuccessTime, 0).In(TimeLocal).Format("2006-01-02 15:04:05")
+			}
+			orderDetail.OrderVerifyTime = order.Get("order_verify_time").Int() //审核时间
+			if orderDetail.OrderVerifyTime > 0 {
+				orderDetail.OrderVerifyTimeText = time.Unix(orderDetail.OrderVerifyTime, 0).In(TimeLocal).Format("2006-01-02 15:04:05")
+			}
+			orderDetail.OrderModifyAt = order.Get("order_modify_at").Int()         //最后更新时间
+			orderDetail.CustomParameters = order.Get("custom_parameters").String() //自定义参数
+			orderDetail.CpaNew = order.Get("cpa_new").Int()                        //是否是 cpa 新用户，1表示是，0表示否
 			orderDetails = append(orderDetails, orderDetail)
 		}
 		orderList.OrderList = orderDetails

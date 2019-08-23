@@ -199,25 +199,30 @@ type OrderList struct {
 }
 
 type OrderDetail struct {
-	OrderSn               string `json:"order_sn"`                 //推广订单编号
-	GoodsId               int64  `json:"goods_id"`                 //商品ID
-	GoodsName             string `json:"goods_name"`               //商品标题
-	GoodsThumbnailUrl     string `json:"goods_thumbnail_url"`      //商品缩略图
-	GoodsQuantity         int64  `json:"goods_quantity"`           //购买商品的数量
-	GoodsPrice            int64  `json:"goods_price"`              //订单中sku的单件价格，单位为分
-	OrderAmount           int64  `json:"order_amount"`             //实际支付金额，单位为分
-	PId                   string `json:"p_id"`                     //推广位ID
-	PromotionRate         int64  `json:"promotion_rate"`           //佣金比例，千分比
-	PromotionAmount       int64  `json:"promotion_amount"`         //佣金金额，单位为分
-	OrderStatus           int64  `json:"order_status"`             //订单状态： -1 未支付; 0-已支付；1-已成团；2-确认收货；3-审核成功；4-审核失败（不可提现）；5-已经结算；8-非多多进宝商品（无佣金订单）
-	OrderStatusDesc       string `json:"order_status_desc"`        //订单状态描述
-	OrderCreateTime       int64  `json:"order_create_time"`        //订单生成时间，UNIX时间戳
-	OrderPayTime          int64  `json:"order_pay_time"`           //支付时间
-	OrderGroupSuccessTime int64  `json:"order_group_success_time"` //成团时间
-	OrderVerifyTime       int64  `json:"order_verify_time"`        //审核时间
-	OrderModifyAt         int64  `json:"order_modify_at"`          //最后更新时间
-	CustomParameters      string `json:"custom_parameters"`        //自定义参数
-	CpaNew                int64  `json:"cpa_new"`                  //是否是 cpa 新用户，1表示是，0表示否
+	OrderSn                   string `json:"order_sn"`                 //推广订单编号
+	GoodsId                   int64  `json:"goods_id"`                 //商品ID
+	GoodsName                 string `json:"goods_name"`               //商品标题
+	GoodsThumbnailUrl         string `json:"goods_thumbnail_url"`      //商品缩略图
+	GoodsQuantity             int64  `json:"goods_quantity"`           //购买商品的数量
+	GoodsPrice                int64  `json:"goods_price"`              //订单中sku的单件价格，单位为分
+	OrderAmount               int64  `json:"order_amount"`             //实际支付金额，单位为分
+	PId                       string `json:"p_id"`                     //推广位ID
+	PromotionRate             int64  `json:"promotion_rate"`           //佣金比例，千分比
+	PromotionAmount           int64  `json:"promotion_amount"`         //佣金金额，单位为分
+	OrderStatus               int64  `json:"order_status"`             //订单状态： -1 未支付; 0-已支付；1-已成团；2-确认收货；3-审核成功；4-审核失败（不可提现）；5-已经结算；8-非多多进宝商品（无佣金订单）
+	OrderStatusDesc           string `json:"order_status_desc"`        //订单状态描述
+	OrderCreateTime           int64  `json:"-"`                        //订单生成时间，UNIX时间戳
+	OrderCreateTimeText       string `json:"order_create_time"`        //订单生成时间，UNIX时间戳
+	OrderPayTime              int64  `json:"-"`                        //支付时间
+	OrderPayTimeText          string `json:"order_pay_time"`           //支付时间
+	OrderGroupSuccessTime     int64  `json:"-"`                        //成团时间
+	OrderGroupSuccessTimeText string `json:"order_group_success_time"` //成团时间
+	OrderVerifyTime           int64  `json:"-"`                        //审核时间
+	OrderVerifyTimeText       string `json:"order_verify_time"`        //审核时间
+	OrderModifyAt             int64  `json:"-"`                        //最后更新时间
+	OrderModifyAtText         string `json:"order_modify_at"`          //最后更新时间
+	CustomParameters          string `json:"custom_parameters"`        //自定义参数
+	CpaNew                    int64  `json:"cpa_new"`                  //是否是 cpa 新用户，1表示是，0表示否
 }
 
 //店铺部分
