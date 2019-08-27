@@ -623,6 +623,101 @@ func (client *ApiReq) DdkMallListGet(mallIds, merchantType interface{}, catId, h
 	}
 }
 
+//pdd.ddk.mall.goods.list.get（查询店铺商品）
+func (client *ApiReq) DdkMallGoodsListGet(mallId, page, pageSize int64) (*MallGoodsList, *ApiErrorInfo) {
+	params := ApiParams{}
+	params["mall_id"] = fmt.Sprint(mallId) //店铺id
+	if page <= 0 {
+		page = 1
+	}
+	params["page"] = fmt.Sprint(page)
+	if pageSize <= 0 || pageSize > 100 {
+		pageSize = 20
+	}
+	params["page_size"] = fmt.Sprint(pageSize)
+
+	resp, err := client.Execute("pdd.ddk.mall.goods.list.get", params)
+	if err != nil {
+		return nil, err
+	}
+
+	if apiErrInfo := client.CheckApiErr(resp); apiErrInfo != nil {
+		return nil, apiErrInfo
+	}
+
+	var mallGoodsList MallGoodsList
+
+	goodsResp := resp.Get("goods_info_list_response")
+	if goodsResp.Exists() && goodsResp.Get("goods_list").IsArray() {
+		mallGoodsList.Total = goodsResp.Get("total").Int()
+		goodsList := []MallGoodsInfo{} //创建一个以goodsId为索引的字典
+		for _, value := range goodsResp.Get("goods_list").Array() {
+			goods := MallGoodsInfo{}
+			goods.CreateAt = value.Get("create_at").Int()                       //商品创建时间（UNIX时间戳）
+			goods.GoodsId = value.Get("goods_id").Int()                         //商品id
+			goods.GoodsName = value.Get("goods_name").String()                  //商品名称
+			goods.GoodsDesc = value.Get("goods_desc").String()                  //商品描述
+			goods.GoodsThumbnailUrl = value.Get("goods_thumbnail_url").String() //商品缩略图
+			goods.GoodsImageUrl = value.Get("goods_image_url").String()         //商品主图
+			goods.GoodsGalleryUrls = value.Get("goods_gallery_urls").String()   //商品轮播图
+			goods.SalesTip = value.Get("sales_tip").String()                    //已售卖件数
+			goods.GoodsMarkPrice = value.Get("goods_mark_price").Int()          //商品市场价（单位为分）
+			goods.GoodsFactPrice = value.Get("goods_fact_price").Int()          //商品实际价格（单位为分）
+			goods.MinGroupPrice = value.Get("min_group_price").Int()            //商品拼团价（单位为分）
+			goods.MinNormalPrice = value.Get("min_normal_price").Int()          //商品单买价（单位为分）
+			goods.MallId = value.Get("mall_id").Int()                           //店铺id
+			goods.MallName = value.Get("mall_name").String()                    //店铺名称
+			goods.MerchantType = value.Get("merchant_type").Int()               //店铺类型，1-个人，2-企业，3-旗舰店，4-专卖店，5-专营店，6-普通店（未传为全部）
+			goods.CategoryId = value.Get("category_id").Int()                   //商品类目id
+			goods.CategoryName = value.Get("category_name").String()            //商品类目名
+			goods.OptId = value.Get("opt_id").Int()                             //商品标签id
+			goods.OptName = value.Get("opt_name").String()                      //商品标签名
+			if value.Get("opt_ids").IsArray() {
+				for _, v := range value.Get("opt_ids").Array() {
+					goods.OptIds = append(goods.OptIds, v.Int()) //商品标签id
+				}
+			}
+			if value.Get("cat_ids").IsArray() {
+				for _, v := range value.Get("cat_ids").Array() {
+					goods.CatIds = append(goods.CatIds, v.Int()) //商品类目id
+				}
+			}
+			goods.GoodsType = value.Get("goods_type").Int()                         //商品类型，1-普通商品，2-进口商品，3-直供，4-直邮
+			goods.HasCoupon = value.Get("has_coupon").Bool()                        //是否有优惠券
+			goods.CouponId = value.Get("coupon_id").Int()                           //优惠券ID
+			goods.CouponMinOrderAmount = value.Get("coupon_min_order_amount").Int() //优惠券最小门槛价（单位为分）
+			goods.CouponDiscount = value.Get("coupon_discount").Int()               //优惠券面额（单位为分）
+			goods.CouponTotalQuantity = value.Get("coupon_total_quantity").Int()    //优惠券总数量
+			goods.CouponRemainQuantity = value.Get("coupon_remain_quantity").Int()  //优惠券剩余数量
+			goods.CouponStartTime = value.Get("coupon_start_time").Int()            //优惠券开始时间（unix时间戳）
+			goods.CouponEndTime = value.Get("coupon_end_time").Int()                //优惠券结束时间（unix时间戳）
+			goods.PromotionRate = value.Get("promotion_rate").Int()                 //佣金比（千分比）
+			goods.CouponPrice = value.Get("coupon_price").Int()                     //优惠券面额
+			goods.GoodsRate = value.Get("goods_rate").Int()                         //商品佣金比（千分比）
+			goods.MarketFee = value.Get("market_fee").Int()                         //佣金（单位为分）
+			goods.MallCps = value.Get("mall_cps").Int()                             //该商品所在店铺是否参与全店推广，0：否，1：是
+			goods.GoodsEvalCount = value.Get("goods_eval_count").Int()              //商品评价数
+			goods.CatId = value.Get("cat_id").Int()                                 //商品类目ID
+			goods.ShareDesc = value.Get("share_desc").String()                      //分享文案
+			goods.SaleNum24 = value.Get("sale_num_24").Int()                        //最近24小时多多进宝商品销量
+			goods.SaleNumToday = value.Get("sale_num_today").Int()                  //今日销量
+			goods.QrCodeImageUrl = value.Get("qr_code_image_url").String()          //聊天二维码图片url
+			goods.MallRate = value.Get("mall_rate").Int()                           //全店推广店铺佣金比（千分比）
+			goods.DescTxt = value.Get("desc_txt").String()                          //描述分
+			goods.ServTxt = value.Get("serv_txt").String()                          //服务j分
+			goods.LgstTxt = value.Get("lgst_txt").String()                          //物流分
+			goodsList = append(goodsList, goods)
+		}
+		mallGoodsList.GoodsList = goodsList
+		return &mallGoodsList, nil
+	} else {
+		errInfo := ApiErrorInfo{}
+		errInfo.ErrorCode = 77777
+		errInfo.SubMsg = ApiErrInfo[errInfo.ErrorCode].Error()
+		return nil, &errInfo
+	}
+}
+
 func joinArr(value interface{}) (string, bool) {
 	var returnStr string
 	if value != nil {

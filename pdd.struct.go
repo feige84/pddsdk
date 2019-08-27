@@ -266,3 +266,57 @@ type MallList struct {
 	MallList []MallInfo `json:"mall_list"`
 	Total    int64      `json:"total"`
 }
+
+//店铺商品
+type MallGoodsList struct {
+	GoodsList []MallGoodsInfo `json:"goods_list"`
+	Total     int64           `json:"total"`
+}
+
+type MallGoodsInfo struct {
+	CreateAt             int64   `json:"create_at"`               //商品创建时间（UNIX时间戳）
+	GoodsId              int64   `json:"goods_id"`                //商品id
+	GoodsName            string  `json:"goods_name"`              //商品名称
+	GoodsDesc            string  `json:"goods_desc"`              //商品描述
+	GoodsThumbnailUrl    string  `json:"goods_thumbnail_url"`     //商品缩略图
+	GoodsImageUrl        string  `json:"goods_image_url"`         //商品主图
+	GoodsGalleryUrls     string  `json:"goods_gallery_urls"`      //商品轮播图
+	SalesTip             string  `json:"sales_tip"`               //已售卖件数
+	GoodsMarkPrice       int64   `json:"goods_mark_price"`        //商品市场价（单位为分）
+	GoodsFactPrice       int64   `json:"goods_fact_price"`        //商品实际价格（单位为分）
+	MinGroupPrice        int64   `json:"min_group_price"`         //商品拼团价（单位为分）
+	MinNormalPrice       int64   `json:"min_normal_price"`        //商品单买价（单位为分）
+	MallId               int64   `json:"mall_id"`                 //店铺id
+	MallName             string  `json:"mall_name"`               //店铺名称
+	MerchantType         int64   `json:"merchant_type"`           //店铺类型，1-个人，2-企业，3-旗舰店，4-专卖店，5-专营店，6-普通店（未传为全部）
+	CategoryId           int64   `json:"category_id"`             //商品类目id
+	CategoryName         string  `json:"category_name"`           //商品类目名
+	OptId                int64   `json:"opt_id"`                  //商品标签id
+	OptName              string  `json:"opt_name"`                //商品标签名
+	OptIds               []int64 `json:"opt_ids"`                 //商品标签ID
+	CatIds               []int64 `json:"cat_ids"`                 //商品标签ID（多级）
+	GoodsType            int64   `json:"goods_type"`              //商品类型，1-普通商品，2-进口商品，3-直供，4-直邮
+	HasCoupon            bool    `json:"has_coupon"`              //是否有优惠券
+	CouponId             int64   `json:"coupon_id"`               //优惠券ID
+	CouponMinOrderAmount int64   `json:"coupon_min_order_amount"` //优惠券最小门槛价（单位为分）
+	CouponDiscount       int64   `json:"coupon_discount"`         //优惠券面额（单位为分）
+	CouponTotalQuantity  int64   `json:"coupon_total_quantity"`   //优惠券总数量
+	CouponRemainQuantity int64   `json:"coupon_remain_quantity"`  //优惠券剩余数量
+	CouponStartTime      int64   `json:"coupon_start_time"`       //优惠券开始时间（unix时间戳）
+	CouponEndTime        int64   `json:"coupon_end_time"`         //优惠券结束时间（unix时间戳）
+	PromotionRate        int64   `json:"promotion_rate"`          //佣金比（千分比）
+	CouponPrice          int64   `json:"coupon_price"`            //优惠券面额
+	GoodsRate            int64   `json:"goods_rate"`              //商品佣金比（千分比）
+	MarketFee            int64   `json:"market_fee"`              //佣金（单位为分）
+	MallCps              int64   `json:"mall_cps"`                //该商品所在店铺是否参与全店推广，0：否，1：是
+	GoodsEvalCount       int64   `json:"goods_eval_count"`        //商品评价数
+	CatId                int64   `json:"cat_id"`                  //商品类目ID
+	ShareDesc            string  `json:"share_desc"`              //分享文案
+	SaleNum24            int64   `json:"sale_num_24"`             //最近24小时多多进宝商品销量
+	SaleNumToday         int64   `json:"sale_num_today"`          //今日销量
+	QrCodeImageUrl       string  `json:"qr_code_image_url"`       //聊天二维码图片url
+	MallRate             int64   `json:"mall_rate"`               //全店推广店铺佣金比（千分比）
+	DescTxt              string  `json:"desc_txt"`                //描述分
+	ServTxt              string  `json:"serv_txt"`                //服务j分
+	LgstTxt              string  `json:"lgst_txt"`                //物流分
+}
