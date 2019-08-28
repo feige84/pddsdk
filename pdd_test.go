@@ -16,9 +16,9 @@ func TestExecute(t *testing.T) {
 	//client.WriteErrLog = InsertErrLog
 	client.CacheLife = 0
 
-	data6, apiErr6 := client.DdkMallGoodsListGet(371355503, 1, 10)
-	jsonData, jsonErr := json.Marshal(apiErr6)
-	fmt.Println("jsonData:", string(jsonData), jsonErr, data6)
+	//data6, apiErr6 := client.DdkMallGoodsListGet(371355503, 1, 10)
+	//jsonData, jsonErr := json.Marshal(apiErr6)
+	//fmt.Println("jsonData:", string(jsonData), jsonErr, data6)
 
 	//jd.union.open.category.goods.get 商品类目查询
 	//data, apiErr := client.DdkGoodsPromotionUrlGenerate(1116130524, "1817118_107021838", "", 0, true, true, true, true, true)
@@ -51,8 +51,9 @@ func TestExecute(t *testing.T) {
 	//fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr5)
 
 	//jd.union.open.goods.jingfen.query 京粉精选商品查询接口
-	//data6, apiErr6 := client.NormalGetJFGoods(1, 1, 20, "inOrderCount30DaysSku", "desc")
-	//fmt.Println("return:", data6, apiErr6)
+	data6, apiErr6 := client.DdkOrderListRangeGet("2019-08-22 00:00:00", "2019-08-24 00:00:00", "", 100)
+	jsonData, jsonErr := json.Marshal(data6)
+	fmt.Println("jsonData:", string(jsonData), jsonErr, apiErr6)
 
 	//jd.union.open.user.pid.get 获取PID //母账号无权限
 	//data7, apiErr7 := client.NormalGetPid(1000218958, 1224241220, 1, "", "花生小宝")

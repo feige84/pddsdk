@@ -194,8 +194,9 @@ type PromotionUrlGoodsDetail struct {
 
 //订单部分
 type OrderList struct {
-	OrderList  []OrderDetail `json:"order_list"`
-	TotalCount int64         `json:"total_count"`
+	OrderList   []OrderDetail `json:"order_list"`
+	LastOrderId string        `json:"last_order_id"` //根据支付时间段查找订单有这个。
+	TotalCount  int64         `json:"total_count"`   //根据更新时间查找订单有这个。
 }
 
 type OrderDetail struct {
