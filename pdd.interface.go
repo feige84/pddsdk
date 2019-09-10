@@ -702,7 +702,7 @@ func (client *ApiReq) DdkMallGoodsListGet(mallId, page, pageSize int64) (*MallGo
 	if page <= 0 {
 		page = 1
 	}
-	params["page"] = fmt.Sprint(page)
+	params["page_number"] = fmt.Sprint(page)
 	if pageSize <= 0 || pageSize > 100 {
 		pageSize = 20
 	}
