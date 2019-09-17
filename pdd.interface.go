@@ -623,8 +623,8 @@ func (client *ApiReq) DdkMallListGet(mallIds, merchantType interface{}, catId, h
 		params["mall_id_list"] = mallIdList //店铺id
 	}
 	if merchantTypeList, hasData := joinArr(merchantType); hasData {
-		//传入ID精准查询
-		params["merchant_type_list"] = merchantTypeList //店铺id
+		//店铺类型
+		params["merchant_type_list"] = merchantTypeList //店铺类型
 	}
 	if catId > 0 {
 		params["cat_id"] = fmt.Sprint(catId) //商品类目ID，使用pdd.goods.cats.get接口获取
@@ -658,6 +658,7 @@ func (client *ApiReq) DdkMallListGet(mallIds, merchantType interface{}, catId, h
 	//range_vo_list 这个参数文档说是筛选范围。并没有给样例。
 
 	resp, err := client.Execute("pdd.ddk.merchant.list.get", params)
+	fmt.Println("resp, err", resp, err)
 	if err != nil {
 		return nil, err
 	}
