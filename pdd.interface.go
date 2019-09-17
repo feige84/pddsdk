@@ -658,7 +658,6 @@ func (client *ApiReq) DdkMallListGet(mallIds, merchantType interface{}, catId, h
 	//range_vo_list 这个参数文档说是筛选范围。并没有给样例。
 
 	resp, err := client.Execute("pdd.ddk.merchant.list.get", params)
-	fmt.Println("resp, err", resp, err)
 	if err != nil {
 		return nil, err
 	}
