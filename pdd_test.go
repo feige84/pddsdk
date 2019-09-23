@@ -7,7 +7,7 @@ import (
 )
 
 func TestExecute(t *testing.T) {
-	client := NewClient("7ae0ebbb60e6460d9444a56460a177db", "eef17075f318f9a3f1acfe04b42c9eb62453bc18")
+	client := NewClient("xxx", "xxx")
 	//client.GetCache = FileGetCache
 	//client.SetCache = FileSetCache
 	//client.WriteErrLog = InsertErrLog
