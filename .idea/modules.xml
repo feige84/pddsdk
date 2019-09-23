@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/pddsdk.iml" filepath="$PROJECT_DIR$/.idea/pddsdk.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/PDDSDK.iml" filepath="$PROJECT_DIR$/.idea/PDDSDK.iml" />
+>>>>>>> fd075b6446639160f86309c39f98f7bf76c3477b
     </modules>
   </component>
 </project>
