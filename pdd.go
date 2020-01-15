@@ -32,8 +32,8 @@ type ApiReq struct {
 	ReqCount     int64
 	//GetCache    func(...interface{}) string  //FILE
 	//SetCache    func(...interface{}) bool //FILE
-	GetCache    func(string) string                   //REDIS
-	SetCache    func(interface{}, interface{}, int64) //REDIS
+	GetCache    func(string) string                         //REDIS
+	SetCache    func(interface{}, interface{}, int64) error //REDIS
 	WriteErrLog func(ApiLog)
 }
 
